@@ -1,14 +1,17 @@
 const userService = require('../services/userService');
 
-exports.getUsers = async (req, res, next) => {
+exports.register = async (req, res, next) => {
   try {
-    const users = await userService.findAllUsers();
-    // Render tệp views/users/index.ejs và truyền dữ liệu 'users'
-    res.render('users/index', { 
-      users: users,
-      pageTitle: 'Trang chủ' 
-    });
+    // 1. Lấy dữ liệu từ Request
+    const userData = req.body;
+
+    // 2. Gọi Service xử lý
+    const newUser = await userService.registerUser(userData);
+
+    // 3. Phản hồi kết quả
+    res.status(201).render('auth/success', { user: newUser });
   } catch (error) {
+    // Chuyển lỗi sang Middleware xử lý lỗi tập trung
     next(error);
   }
 };
