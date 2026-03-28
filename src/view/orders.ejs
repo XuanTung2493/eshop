@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fashion Store - Order Management</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-text">
+        <p class="brand">FASHION STORE</p>
+        <h1>Clothing Order Management</h1>
+        <p class="hero-desc">
+          Manage fashion orders, update delivery addresses, review totals,
+          and monitor customer purchases in one place.
+        </p>
+
+        <form action="/orders/insert-sample" method="POST" class="hero-actions">
+          <button type="submit" class="btn btn-primary">Insert Sample Orders</button>
+        </form>
+      </div>
+
+      <div class="hero-card">
+        <div class="mini-card">
+          <span class="mini-label">Category</span>
+          <strong>Men & Women Fashion</strong>
+        </div>
+        <div class="mini-card">
+          <span class="mini-label">Popular Items</span>
+          <strong>Shirts, Trousers, T-Shirts</strong>
+        </div>
+        <div class="mini-card">
+          <span class="mini-label">Store Status</span>
+          <strong>Open for Management</strong>
+        </div>
+      </div>
+    </header>
+
+    <section class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-title">Total Orders</span>
+        <span class="stat-value"><%= orders ? orders.length : 0 %></span>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-title">Product ID = "somi"</span>
+        <span class="stat-value"><%= somiCount %></span>
+      </div>
+
+      <div class="stat-box">
+        <span class="stat-title">Store Type</span>
+        <span class="stat-value small">Clothing Shop</span>
+      </div>
+    </section>
+
+    <section class="content-card">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Order Panel</p>
+          <h2>Order List</h2>
+        </div>
+      </div>
+
+      <% if (orders && orders.length > 0) { %>
+        <div class="table-wrap">
+          <table class="order-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Products</th>
+                <th>Total Amount</th>
+                <th>Delivery Address</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orders.forEach(order => { %>
+                <tr>
+                  <td>
+                    <div class="order-id-badge">#<%= order.orderid %></div>
+                  </td>
+
+                  <td>
+                    <div class="product-list">
+                      <% order.products.forEach(p => { %>
+                        <div class="product-item">
+                          <div class="product-main">
+                            <span class="product-name"><%= p.product_name %></span>
+                            <span class="product-id">ID: <%= p.product_id %></span>
+                          </div>
+
+                          <div class="product-meta">
+                            <span class="tag">Size: <%= p.size %></span>
+                            <span class="tag">Price: <%= p.price %></span>
+                            <span class="tag">Qty: <%= p.quantity %></span>
+                          </div>
+                        </div>
+                      <% }) %>
+                    </div>
+                  </td>
+
+                  <td>
+                    <div class="amount-box">$<%= order.total_amount %></div>
+                  </td>
+
+                  <td>
+                    <form class="address-form" action="/orders/<%= order.orderid %>/address" method="POST">
+                      <input
+                        type="text"
+                        name="delivery_address"
+                        value="<%= order.delivery_address %>"
+                        required
+                      >
+                      <button type="submit" class="btn btn-secondary">Update</button>
+                    </form>
+                  </td>
+
+                  <td>
+                    <div class="action-group">
+                      <a
+                        class="btn btn-danger"
+                        href="/orders/<%= order.orderid %>/delete"
+                        onclick="return confirm('Delete this order?')"
+                      >
+                        Delete
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="empty-box">
+          <h3>No orders yet</h3>
+          <p>Click <strong>Insert Sample Orders</strong> to load fashion order data.</p>
+        </div>
+      <% } %>
+    </section>
+  </div>
+</body>
+</html>
